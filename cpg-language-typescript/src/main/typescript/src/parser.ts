@@ -1,18 +1,29 @@
-import { SyntaxKind, SourceFile, Node, createProgram, forEachChild } from 'typescript';
+import {
+    SyntaxKind,
+    SourceFile,
+    Node,
+    ScriptKind,
+    ScriptTarget,
+    createSourceFile,
+    forEachChild,
+} from 'typescript';
+import * as fs from 'node:fs';
 import * as path from 'node:path';
 
 const file = path.normalize(process.argv[2]);
-
-const program = createProgram([file], {
-    allowJs: true,
-});
-
-var sources = program.getSourceFiles()
+const extension = path.extname(file).toLowerCase();
+const scriptKind =
+    extension === '.tsx'
+        ? ScriptKind.TSX
+        : extension === '.jsx'
+          ? ScriptKind.JSX
+          : extension === '.js'
+            ? ScriptKind.JS
+            : ScriptKind.TS;
+const source = createSourceFile(file, fs.readFileSync(file, 'utf8'), ScriptTarget.Latest, true, scriptKind);
 let indent = 0;
 
-sources.filter(sf => sf.fileName.endsWith(file)).forEach(sf => {
-    console.log(printTree(sf, sf, false));
-})
+console.log(printTree(source, source, false));
 
 function printTree(sf: SourceFile, node: Node, needsComma: boolean): string {
     var output = " ".repeat(indent) + `{ "type": "${SyntaxKind[node.kind]}"`

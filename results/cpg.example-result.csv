@@ -1,0 +1,12 @@
+page_name | page_method | ident | source | sink
+Ability.test | abilityTest | a | it | expect
+Ability.test | abilityTest | b | it | UNKNOWN.assertContain
+Ability.test | abilityTest | a | it | UNKNOWN.assertEqual
+OpenHarmonyTestRunner | onRun | lMonitor | { abilityName: testAbilityName, onAbilityCreate: onAbilityCreateCallback, } | UNKNOWN.addAbilityMonitor
+OpenHarmonyTestRunner | onRun | cmd | cmd = 'aa start -d 0 -a TestAbility' + ' -b ' + abilityDelegatorArguments.bundleName | UNKNOWN.info
+OpenHarmonyTestRunner | onRun | cmd | cmd = 'aa start -d 0 -a TestAbility' + ' -b ' + abilityDelegatorArguments.bundleName | UNKNOWN.executeShellCommand
+PermissionUtils | openPermissionSettingsPage | bundleInfo | UNKNOWN.getBundleInfoForSelfSync | UNKNOWN.startAbility
+SpeechRecognizerManager | setListener | setListener | { // 开始识别成功回调 onStart(sessionId: string, eventMessage: string) { }, // 事件回调 onEvent(sessionId: string, eventCode: number, eventMessage: string) { }, // 识别结果回调，包括中间结果和最终结果 onResult(sessionId: string, result: speechRecognizer.SpeechRecognitionResult) { SpeechRecognizerManager.speechResult = result callback && callback(result) }, // 识别完成回调 onComplete(sessionId: string, eventMessage: string) { }, // 错误回调，错误码通过本方法返回 // 如：返回错误码1002200006，识别引擎正忙，引擎正在识别中 // 更多错误码请参考错误码参考 onError(sessionId: string, errorCode: number, errorMessage: string) { }, } | UNKNOWN.setListener
+SpeechRecognizerManager | startListening | recognizerParams | { // 会话id sessionId: SpeechRecognizerManager.sessionId, // 音频配置信息。 audioInfo: { // 音频类型。 当前仅支持“pcm” audioType: 'pcm', // 音频的采样率。 当前仅支持16000采样率 sampleRate: 16000, // 音频返回的通道数信息。 当前仅支持通道1。 soundChannel: 1, // 音频返回的采样位数。 当前仅支持16位 sampleBit: 16 }, // 录音识别 extraParams: { // 0 实时录音识别 "recognitionMode": 0, // 最大支持音频时长 maxAudioDuration: 60000 } } | UNKNOWN.startListening
+TestAbility | onCreate | abilityDelegator | abilityDelegator: any | UNKNOWN.hypiumTest
+TestAbility | onCreate | abilityDelegatorArguments | abilityDelegatorArguments: any | UNKNOWN.hypiumTest

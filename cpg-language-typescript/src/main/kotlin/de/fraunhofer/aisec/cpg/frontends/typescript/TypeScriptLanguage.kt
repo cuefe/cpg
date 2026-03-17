@@ -27,5 +27,5 @@ package de.fraunhofer.aisec.cpg.frontends.typescript
 
 /** The TypeScript language. */
 class TypeScriptLanguage : JavaScriptLanguage() {
-    override val fileExtensions = listOf("ts", "tsx")
+    override val fileExtensions = listOf("ts", "tsx", "ets")
 }
