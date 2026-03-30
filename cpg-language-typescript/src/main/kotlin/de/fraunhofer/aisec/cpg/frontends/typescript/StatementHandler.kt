@@ -28,6 +28,7 @@ package de.fraunhofer.aisec.cpg.frontends.typescript
 import de.fraunhofer.aisec.cpg.frontends.Handler
 import de.fraunhofer.aisec.cpg.graph.newBlock
 import de.fraunhofer.aisec.cpg.graph.newDeclarationStatement
+import de.fraunhofer.aisec.cpg.graph.newIfElse
 import de.fraunhofer.aisec.cpg.graph.newReturn
 import de.fraunhofer.aisec.cpg.graph.statements.DeclarationStatement
 import de.fraunhofer.aisec.cpg.graph.statements.Return
@@ -48,6 +49,7 @@ class StatementHandler(lang: TypeScriptLanguageFrontend) :
             "Block" -> return handleBlock(node)
             "FirstStatement" -> return handleVariableStatement(node)
             "VariableStatement" -> return handleVariableStatement(node)
+            "IfStatement" -> return handleIfStatement(node)
             "ExpressionStatement" -> return handleExpressionStatement(node)
             "ReturnStatement" -> return handleReturnStatement(node)
             "FunctionDeclaration" -> return handleFunction(node)
@@ -87,6 +89,23 @@ class StatementHandler(lang: TypeScriptLanguageFrontend) :
         node.children?.forEach { this.handle(it)?.let { it1 -> block.statements += it1 } }
 
         return block
+    }
+
+    private fun handleIfStatement(node: TypeScriptNode): Statement {
+        val ifStatement = newIfElse(rawNode = node)
+        val children = node.children ?: emptyList()
+
+        this.frontend.scopeManager.enterScope(ifStatement)
+
+        children.getOrNull(0)?.let {
+            ifStatement.condition = this.frontend.expressionHandler.handle(it)
+        }
+        children.getOrNull(1)?.let { ifStatement.thenStatement = this.handle(it) }
+        children.getOrNull(2)?.let { ifStatement.elseStatement = this.handle(it) }
+
+        this.frontend.scopeManager.leaveScope(ifStatement)
+
+        return ifStatement
     }
 
     private fun handleExpressionStatement(node: TypeScriptNode): Expression {

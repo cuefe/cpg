@@ -32,6 +32,8 @@ import de.fraunhofer.aisec.cpg.graph.declarations.Function
 
 class DeclarationHandler(lang: TypeScriptLanguageFrontend) :
     Handler<Declaration, TypeScriptNode, TypeScriptLanguageFrontend>(::ProblemDeclaration, lang) {
+    private val arkUiAdapter = ArkUiAdapter(lang)
+
     init {
         map.put(TypeScriptNode::class.java, ::handleNode)
     }
@@ -111,6 +113,10 @@ class DeclarationHandler(lang: TypeScriptLanguageFrontend) :
     }
 
     fun handleSourceFile(node: TypeScriptNode): TranslationUnit {
+        arkUiAdapter.handleSourceFile(node)?.let {
+            return it
+        }
+
         val tu = newTranslationUnit(node.location.file, rawNode = node)
 
         this.frontend.scopeManager.resetToGlobal(tu)
